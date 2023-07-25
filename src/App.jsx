@@ -6,7 +6,6 @@ import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import DateObject from "react-date-object"
 import farvardin from "farvardin"
-import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import moment from "moment-jalaali"
 
@@ -174,7 +173,6 @@ function App() {
             </div>
           </div>
         )}
-      <ToastContainer rtl />
     </div>
   )
 }
