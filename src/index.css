@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Yekan Bakh";
+  src: local("YekanBakh-Regular"),
+    url("../../public/fonts/YekanBakh-Regular.eot?#iefix")
+      format("embedded-opentype"),
+    url("../../public/fonts/YekanBakh-Regular.woff2") format("woff2"),
+    url("../../public/fonts/YekanBakh-Regular.woff") format("woff"),
+    url("../../public/fonts/YekanBakh-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  background-color: #747474;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #acacac;
+  transition: 0.5s;
+  border-top: solid 6px #9b9b9b;
+  border-bottom: solid 6px #9b9b9b;
+}
+
+*,
+input,
+select {
+  font-family: "Yekan Bakh", "vazir";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+input,
+select,
+textarea {
+  outline: none;
+}
+
+body {
+  background-color: #e7e7e7;
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  padding: 0;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Start Hide Number Input Buttons */
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* End Hide Number Input Buttons */
