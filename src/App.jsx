@@ -10,99 +10,69 @@ import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import moment from "moment-jalaali"
 
+function dateReducer(state, action) {
+  switch (action.type) {
+    case "SELECTED_DAY":
+      return { ...state, selectedDay: action.value }
+
+    case "SELECTED_MONTH":
+      return { ...state, selectedMonth: action.value }
+
+    case "SELECTED_YEAR":
+      return { ...state, selectedYear: action.value }
+
+    case "TO_YOUR_NEXT_BIRTH_DAY":
+      return { ...state, toYourNextBirth: action.value }
+
+    case "AD_DATE":
+      return { ...state, aDDate: action.value }
+
+    case "YEUR_AGE":
+      return { ...state, yourAge: action.value }
+
+    default:
+      return { ...state }
+  }
+}
+
 function App() {
-  const [state, dispatch] = useReducer(dateReducer, {
-    selectedDay: null,
-    selectedMonth: null,
-    selectedYear: null,
+  let date = new DateObject()
+  date.convert(persian)
+
+  const [ageDetails, dispatch] = useReducer(dateReducer, {
+    selectedDay: date.day,
+    selectedMonth: date.month.number,
+    selectedYear: date.year,
     toYourNextBirth: null,
     aDDate: null,
     yourAge: null,
   })
 
-  // const [selectedDay, setSelectedDay] = useState(null)
-  // const [selectedMonth, setSelectedMonth] = useState(null)
-  // const [selectedYear, setSelectedYear] = useState(null)
-  // const [toYourNextBirth, setToYourNextBirth] = useState(null)
-  // const [aDDate, setADDate] = useState(null)
-  // const [yourAge, setYourAge] = useState(null)
-
-  function dateReducer(state, action) {
-    console.log(action.type)
-    // return { state, [action.type]: action.value }
-
-    switch (action.type) {
-      case "selectedDay":
-        console.log({ ...state, selectedDay: action.value })
-        return { ...state, selectedDay: action.value }
-
-        break
-
-      case "selectedMonth":
-        console.log({ ...state, selectedMonth: action.value })
-        return { ...state, selectedMonth: action.value }
-
-        break
-
-      case "selectedYear":
-        console.log({ ...state, selectedYear: action.value })
-        return { ...state, selectedYear: action.value }
-
-        break
-
-      case "toYourNextBirth":
-        console.log({ ...state, toYourNextBirth: action.value })
-        return { ...state, toYourNextBirth: action.value }
-
-        break
-
-      case "aDDate":
-        console.log({ ...state, aDDate: action.value })
-        return { ...state, aDDate: action.value }
-
-        break
-
-      case "yourAge":
-        console.log({ ...state, yourAge: action.value })
-        return { ...state, yourAge: action.value }
-
-        break
-
-      default:
-        return state
-        break
-    }
-  }
-
-  let date = new DateObject()
-
-  date.convert(persian)
-
   useEffect(() => {
     dispatch({
-      type: "aDDate",
+      type: "AD_DATE",
       value: farvardin
         .solarToGregorian(
-          state.selectedYear,
-          state.selectedMonth,
-          state.selectedDay
+          ageDetails.selectedYear,
+          ageDetails.selectedMonth,
+          ageDetails.selectedDay
         )
         .join("/"),
     })
 
-    const shamsiDate = `${state.selectedYear}/${state.selectedMonth}/${state.selectedDay}`
+    const shamsiDate = `${ageDetails.selectedYear}/${ageDetails.selectedMonth}/${ageDetails.selectedDay}`
     const miladiDate = moment(shamsiDate, "jYYYY/jMM/jDD").format("YYYY/MM/DD")
     const diffYears = moment().diff(miladiDate, "years")
     const diffMonths = moment().diff(miladiDate, "Months")
     const diffDay = moment().diff(miladiDate, "Day")
 
     dispatch({
-      type: "yourAge",
+      type: "YEUR_AGE",
       value: `شما ${diffYears} سال یا به عبارتی ${diffMonths} ماه و یا ${diffDay} روز سن دارید.`,
     })
 
-    const futureDate = `${date.year + 1}/${state.selectedMonth}/${
-      state.selectedDay
+    const futureDate = `${date.year + 1}/${ageDetails.selectedMonth}/${
+      ageDetails.selectedDay
     }`
     const today = moment()
     const daysLeft = moment(futureDate, "jYYYY/jMM/jDD").diff(today, "days")
@@ -118,7 +88,7 @@ function App() {
       const seconds = duration.seconds()
 
       dispatch({
-        action: "toYourNextBirth",
+        type: "TO_YOUR_NEXT_BIRTH_DAY",
         value: `شما ${
           daysLeft ? daysLeft : 0
         } روز و ${hours} ساعت و ${minutes} دقیقه و ${seconds} ثانیه باقی دارید تا تولد بعدیتان.`,
@@ -126,7 +96,11 @@ function App() {
     }, 1000)
 
     return () => clearInterval(timeLoop)
-  }, [state.selectedDay, state.selectedMonth, state.selectedYear])
+  }, [
+    ageDetails.selectedDay,
+    ageDetails.selectedMonth,
+    ageDetails.selectedYear,
+  ])
 
   return (
     <div className=" select-none flex flex-col gap-5 justify-center items-center">
@@ -173,30 +147,28 @@ function App() {
         calendarPosition="bottom-right"
         maxDate={new DateObject()}
         onChange={(time) => {
-          dispatch({ action: "selectedDay", value: time.day })
-          dispatch({ action: "selectedMonth", value: time.month })
-          dispatch({ action: "selectedYear", value: time.year })
+          dispatch({ type: "SELECTED_DAY", value: time.day })
+          dispatch({ type: "SELECTED_MONTH", value: time.month.number })
+          dispatch({ type: "SELECTED_YEAR", value: time.year })
         }}
         placeholder="تاریخ تولد شما..."
         inputClass="w-96 bg-gray-300 focus:bg-gray-100 transition-all duration-300 p-3 rounded-md text-center shadow-md"
       />
 
-      {state.selectedYear && state.selectedMonth && state.selectedDay && (
-        <div className="bg-gray-300 rounded-md p-5 flex flex-col justify-center items-center gap-5 shadow-md">
-          <div className="flex shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
-            <span className="text-blue-700">سالگرد تولد شما:</span>
-            <span>{state.toYourNextBirth}</span>
-          </div>
-          <div className="flex shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
-            <span className="text-blue-700">سن دقیق شما:</span>
-            <span>{state.yourAge}</span>
-          </div>
-          <div className="flex shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
-            <span className="text-blue-700">تولد شما به میلادی:</span>
-            <span>{state.aDDate}</span>
-          </div>
+      <div className="bg-gray-300 rounded-md p-5 flex flex-col justify-center items-center gap-5 shadow-md">
+        <div className="flex shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
+          <span className="text-blue-700">سالگرد تولد شما:</span>
+          <span>{ageDetails.toYourNextBirth}</span>
         </div>
-      )}
+        <div className="flex shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
+          <span className="text-blue-700">سن دقیق شما:</span>
+          <span>{ageDetails.yourAge}</span>
+        </div>
+        <div className="flex shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
+          <span className="text-blue-700">تولد شما به میلادی:</span>
+          <span>{ageDetails.aDDate}</span>
+        </div>
+      </div>
       <ToastContainer rtl />
     </div>
   )
