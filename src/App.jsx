@@ -151,24 +151,29 @@ function App() {
           dispatch({ type: "SELECTED_MONTH", value: time.month.number })
           dispatch({ type: "SELECTED_YEAR", value: time.year })
         }}
-        placeholder="تاریخ تولد شما..."
-        inputClass="w-96 bg-gray-300 focus:bg-gray-100 transition-all duration-300 p-3 rounded-md text-center shadow-md"
+        placeholder={`تاریخ امروز: ${date.year}/${date.month}/${date.day}`}
+        inputClass="w-80 bg-gray-300 focus:bg-gray-100 transition-all duration-300 p-3 rounded-md text-center shadow-md"
       />
 
-      <div className="bg-gray-300 rounded-md p-5 flex flex-col justify-center items-center gap-5 shadow-md">
-        <div className="flex shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
-          <span className="text-blue-700">سالگرد تولد شما:</span>
-          <span>{ageDetails.toYourNextBirth}</span>
-        </div>
-        <div className="flex shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
-          <span className="text-blue-700">سن دقیق شما:</span>
-          <span>{ageDetails.yourAge}</span>
-        </div>
-        <div className="flex shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
-          <span className="text-blue-700">تولد شما به میلادی:</span>
-          <span>{ageDetails.aDDate}</span>
-        </div>
-      </div>
+      {(ageDetails.selectedDay !== date.day ||
+        ageDetails.selectedMonth !== date.month.number ||
+        ageDetails.selectedYear !== date.year) &&
+        ageDetails.toYourNextBirth && (
+          <div className="bg-gray-300 rounded-md p-5 flex flex-col justify-center items-center gap-5 shadow-md">
+            <div className="flex w- shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
+              <span className="text-blue-700">سالگرد تولد شما:</span>
+              <span>{ageDetails.toYourNextBirth}</span>
+            </div>
+            <div className="flex shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
+              <span className="text-blue-700">سن دقیق شما:</span>
+              <span>{ageDetails.yourAge}</span>
+            </div>
+            <div className="flex shadow-md bg-gray-200 hover:bg-gray-100 transition-all duration-300 cursor-pointer flex-col gap-5 md:flex-row p-5 rounded-md justify-between items-center w-full font-bold">
+              <span className="text-blue-700">تولد شما به میلادی:</span>
+              <span>{ageDetails.aDDate}</span>
+            </div>
+          </div>
+        )}
       <ToastContainer rtl />
     </div>
   )
