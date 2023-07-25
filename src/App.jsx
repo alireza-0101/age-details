@@ -90,7 +90,7 @@ function App() {
       dispatch({
         type: "TO_YOUR_NEXT_BIRTH_DAY",
         value: `شما ${
-          daysLeft ? daysLeft : 0
+          daysLeft >= 365 ? daysLeft - 365 : daysLeft
         } روز و ${hours} ساعت و ${minutes} دقیقه و ${seconds} ثانیه باقی دارید تا تولد بعدیتان.`,
       })
     }, 1000)
